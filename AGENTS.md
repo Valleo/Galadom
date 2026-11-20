@@ -33,25 +33,26 @@ Le but est de s'imposer face aux autres empires.
 ### Règles techniques
 
 - Ciblez **Java 27** et utilisez les fonctionnalités modernes du langage quand elles rendent le code plus clair : `record`, `sealed` interfaces, pattern matching (`switch`, `instanceof`), `var` avec modération.
-- Utilisez **toujours le wrapper Gradle** (`.\gradlew.bat` sous Windows, `./gradlew` sous Linux/macOS). N'utilisez pas un Gradle installé sur la machine.
+- Effectuez les builds depuis **WSL** avec le wrapper Gradle `./gradlew`. N'utilisez ni Gradle installé sur la machine ni le wrapper Windows `gradlew.bat`.
 - N'ajoutez **pas de nouvelle dépendance** sans justification claire. Préférez la bibliothèque standard du JDK.
 - La version du JDK est déclarée via la **toolchain Gradle**. Ne la modifiez pas.
 
 ### Commandes utiles
 
-Dans ce terminal Windows, Java 8 peut être sélectionné par défaut malgré la toolchain Java 27 du projet. Avant d'utiliser Gradle, sélectionnez le JDK 27 installé (ajustez le chemin si son emplacement ou sa version change) :
+Le build doit être lancé dans WSL avec Temurin JDK 27 installé et disponible dans le `PATH` (`java` et `javac`). Depuis WSL, placez-vous dans le dépôt (monté sous `/mnt/c` si le projet est sur le disque Windows), vérifiez la version Java, puis utilisez le wrapper Gradle :
 
-```powershell
-$env:JAVA_HOME = 'C:\Users\frede\.jdks\temurin-27.0.1.0.2'
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+```bash
+cd /mnt/c/Users/frede/Documents/Projets/Galadom
+java -version
+javac -version
+./gradlew build
 ```
 
-Ces commandes ne modifient l'environnement que pour la session PowerShell courante. Utilisez ensuite le wrapper Gradle :
+Le build a été vérifié avec OpenJDK Temurin `27.0.1.1` dans WSL. Si Java n'est pas trouvé, installez/configurez Temurin 27 dans WSL avant de lancer Gradle. Pour les vérifications ciblées, utilisez également le wrapper :
 
-```shell
-.\gradlew.bat build    # compile et lance les tests
-.\gradlew.bat test     # lance uniquement les tests
-.\gradlew.bat run      # lance le jeu (si le plugin application est configuré)
+```bash
+./gradlew test    # lance les tests
+./gradlew run     # lance le jeu (si le plugin application est configuré)
 ```
 
 ---
@@ -146,7 +147,7 @@ galadom
 - Pour tester l'application, remplacez les ports sortants par des **implémentations en mémoire** (fakes) plutôt que par des mocks complexes.
 - Nommez les tests selon le comportement métier attendu, par exemple : `une_flotte_sans_ravitaillement_perd_du_moral`.
 - Tout correctif de bug doit être accompagné d'un **test qui reproduit le bug**.
-- Lancez `.\gradlew.bat test` avant de considérer une tâche comme terminée.
+- Lancez `./gradlew test` depuis WSL avant de considérer une tâche comme terminée.
 
 ---
 

@@ -24,3 +24,51 @@ javafx {
 application {
     mainClass = 'galadom.adapter.in.javafx.GaladomApplication'
 }
+
+tasks.register('syncJetBrainsSkills') {
+    group = 'help'
+    description = 'Downloads the latest refactoring-code skill from JetBrains/skills.'
+
+    doLast {
+        def skillPath = 'refactoring-code/'
+        def treeConnection = new URL('https://api.github.com/repos/JetBrains/skills/git/trees/main?recursive=1').openConnection()
+        treeConnection.connectTimeout = 10000
+        treeConnection.readTimeout = 30000
+        treeConnection.setRequestProperty('User-Agent', 'Galadom-Gradle-Skill-Updater')
+        def tree = new groovy.json.JsonSlurper().parse(treeConnection.inputStream)
+        def skillFiles = tree.tree.findAll { it.type == 'blob' && it.path.startsWith(skillPath) }
+        if (!skillFiles.any { it.path == "${skillPath}SKILL.md" }) {
+            throw new GradleException("JetBrains skill not found: ${skillPath}")
+        }
+
+        def stagingDirectory = layout.buildDirectory.dir('tmp/jetbrains-skills/refactoring-code').get().asFile
+        delete(stagingDirectory)
+        skillFiles.each { entry ->
+            def relativePath = entry.path.substring(skillPath.length())
+            def destination = new File(stagingDirectory, relativePath)
+            if (!destination.canonicalPath.startsWith(stagingDirectory.canonicalPath + File.separator)) {
+                throw new GradleException("Invalid path in JetBrains skill: ${entry.path}")
+            }
+            destination.parentFile.mkdirs()
+            def fileConnection = new URL("https://raw.githubusercontent.com/JetBrains/skills/main/${entry.path}").openConnection()
+            fileConnection.connectTimeout = 10000
+            fileConnection.readTimeout = 30000
+            fileConnection.setRequestProperty('User-Agent', 'Galadom-Gradle-Skill-Updater')
+            fileConnection.inputStream.withCloseable { input ->
+                destination.withOutputStream { output -> output << input }
+            }
+        }
+
+        def installedDirectory = file('.junie/skills/refactoring-code')
+        delete(installedDirectory)
+        copy {
+            from stagingDirectory
+            into installedDirectory
+        }
+        logger.lifecycle("Updated JetBrains skill: ${skillPath}")
+    }
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('syncJetBrainsSkills')
+}
