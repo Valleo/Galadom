@@ -1,4 +1,4 @@
-package galadom.adapter.in.javafx.view;
+package galadom.adapter.in.javafx.view.menu;
 
 import javafx.animation.RotateTransition;
 import javafx.scene.image.ImageView;
