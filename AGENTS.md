@@ -39,6 +39,15 @@ Le but est de s'imposer face aux autres empires.
 
 ### Commandes utiles
 
+Dans ce terminal Windows, Java 8 peut être sélectionné par défaut malgré la toolchain Java 27 du projet. Avant d'utiliser Gradle, sélectionnez le JDK 27 installé (ajustez le chemin si son emplacement ou sa version change) :
+
+```powershell
+$env:JAVA_HOME = 'C:\Users\frede\.jdks\temurin-27.0.1.0.2'
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+```
+
+Ces commandes ne modifient l'environnement que pour la session PowerShell courante. Utilisez ensuite le wrapper Gradle :
+
 ```shell
 .\gradlew.bat build    # compile et lance les tests
 .\gradlew.bat test     # lance uniquement les tests
