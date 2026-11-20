@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = 'galadom'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(27)
+    }
+}
+
+javafx {
+    version = '27'
+    modules = ['javafx.controls']
+}
+
+application {
+    mainClass = 'galadom.adapter.in.javafx.GaladomApplication'
+}
