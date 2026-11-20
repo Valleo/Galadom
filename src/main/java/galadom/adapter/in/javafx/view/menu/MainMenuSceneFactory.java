@@ -17,7 +17,12 @@ final class MainMenuSceneFactory {
     }
 
     private void showMainMenu(Pane screen, Stage stage) {
-        screen.getChildren().setAll(new MainMenuView(stage::close, () -> showCredits(screen, stage)));
+        screen.getChildren().setAll(new MainMenuView(() -> showNewGame(screen, stage), stage::close,
+                () -> showCredits(screen, stage)));
+    }
+
+    private void showNewGame(Pane screen, Stage stage) {
+        screen.getChildren().setAll(new NewGameSetupView(() -> showMainMenu(screen, stage)));
     }
 
     private void showCredits(Pane screen, Stage stage) {

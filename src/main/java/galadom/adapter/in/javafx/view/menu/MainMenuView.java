@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class MainMenuView extends VBox {
-    public MainMenuView(Runnable onQuit, Runnable onCredits) {
+    public MainMenuView(Runnable onNewGame, Runnable onQuit, Runnable onCredits) {
         super(18);
         setAlignment(Pos.CENTER);
         setStyle("-fx-padding: 42px; -fx-background-color: rgba(5, 7, 24, 0.42);");
@@ -19,10 +19,10 @@ public class MainMenuView extends VBox {
         Button loadGame = menuButton("Charger Une Partie");
         Button credits = menuButton("Crédits");
         Button quit = menuButton("Quitter");
-        newGame.setDisable(true);
         loadGame.setDisable(true);
         quit.setOnAction(event -> onQuit.run());
         credits.setOnAction(event -> onCredits.run());
+        newGame.setOnAction(event -> onNewGame.run());
 
         getChildren().addAll(title, newGame, loadGame, credits, quit);
     }
