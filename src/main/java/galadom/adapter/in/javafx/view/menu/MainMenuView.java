@@ -1,13 +1,12 @@
 package galadom.adapter.in.javafx.view.menu;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class MainMenuView extends VBox {
-    public MainMenuView(Runnable onQuit) {
+    public MainMenuView(Runnable onQuit, Runnable onCredits) {
         super(18);
         setAlignment(Pos.CENTER);
         setStyle("-fx-padding: 42px; -fx-background-color: rgba(5, 7, 24, 0.42);");
@@ -23,13 +22,7 @@ public class MainMenuView extends VBox {
         newGame.setDisable(true);
         loadGame.setDisable(true);
         quit.setOnAction(event -> onQuit.run());
-        credits.setOnAction(event -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Crédits");
-            alert.setHeaderText("Galadom");
-            alert.setContentText("Créateur : Valleo\nAnnée de développement : 2026");
-            alert.showAndWait();
-        });
+        credits.setOnAction(event -> onCredits.run());
 
         getChildren().addAll(title, newGame, loadGame, credits, quit);
     }
