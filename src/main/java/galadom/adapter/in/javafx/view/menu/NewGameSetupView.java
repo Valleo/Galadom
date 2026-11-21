@@ -8,11 +8,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.function.IntConsumer;
+
 final class NewGameSetupView extends BorderPane {
     private final GalaxySizeSelection selection = new GalaxySizeSelection();
     private final Label size = new Label();
 
-    NewGameSetupView(Runnable onBack) {
+    NewGameSetupView(Runnable onBack, IntConsumer onStart) {
         setStyle("-fx-padding: 32px; -fx-background-color: rgba(5, 7, 24, 0.72);");
 
         Button back = new Button("Retour");
@@ -48,7 +50,7 @@ final class NewGameSetupView extends BorderPane {
 
         Button start = new Button("Start");
         start.setStyle(buttonStyle());
-        start.setDisable(true);
+        start.setOnAction(event -> onStart.accept(selection.selectedSize()));
         StackPane startContainer = new StackPane(start);
         startContainer.setAlignment(Pos.BOTTOM_RIGHT);
         setBottom(startContainer);
